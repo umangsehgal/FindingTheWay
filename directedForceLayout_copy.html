@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    .link {
+        stroke: #ccc;
+    }
+
+    .node text {
+        pointer-events: none;
+        font: 10px sans-serif;
+    }
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+    var width = 960,
+        height = 800;
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    //Arrow
+    svg.append("defs").selectAll("marker")
+        .data(["suit", "licensing", "resolved"])
+        .enter().append("marker")
+        .attr("id", function (d) {
+            return d;
+        })
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 25)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+        .style("stroke", "#4679BD")
+        .style("opacity", "0.6");
+
+    var force = d3.layout.force()
+        .gravity(0.05)
+        .distance(50)
+        .charge(-1600)
+        .linkDistance(1)
+        .linkStrength(0.1)
+        .size([width, height]);
+
+    d3.json("graph2.json", function (error, json) {
+        if (error) throw error;
+
+        force
+            .nodes(json.nodes)
+            .links(json.links)
+            .start();
+
+        var link = svg.selectAll(".link")
+            .data(json.links)
+            .enter()
+            .append("g")
+            .attr("class", "link")
+            .append("line")
+            .attr("class", "link-line")
+            .style("marker-end", "url(#suit)")
+            .style("stroke-width", "2")
+            .style("stroke", "#4679BD")
+            .style("opacity", "0.6");
+
+
+        var linkText = svg.selectAll(".link")
+            .append("text")
+            .attr("class", "link-label")
+            .attr("font-family", "Arial, Helvetica, sans-serif")
+            .attr("fill", "Black")
+            .style("font", "normal 12px Arial")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                return d.value;
+            });
+
+        var node = svg.selectAll(".node")
+            .data(json.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(force.drag) // To enable dragging
+            .on('dblclick', connectedNodes); //Added code
+
+
+        node.append("svg:circle")
+            .attr("r", 14)
+            .style("fill", "#eee");
+
+
+        node.append("image")
+            .attr("xlink:href", function (d) {
+                return d.position;
+            })
+            .attr("x", -12.5)
+            .attr("y", -12.5)
+            .attr("width", 25)
+            .attr("height", 25);
+
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function (d) {
+                return d.name
+            });
+
+
+        //Toggle stores whether the highlighting is on
+        var toggle = 0;
+        //Create an array logging what is connected to what
+        var linkedByIndex = {};
+        for (i = 0; i < json.nodes.length; i++) {
+            linkedByIndex[i + "," + i] = 1;
+        }
+        json.links.forEach(function (d) {
+            linkedByIndex[d.source.index + "," + d.target.index] = 1;
+        });
+        //This function looks up whether a pair are neighbours
+        function neighboring(a, b) {
+            return linkedByIndex[a.index + "," + b.index];
+        }
+        function connectedNodes() {
+            if (toggle == 0) {
+                //Reduce the opacity of all but the neighbouring nodes
+                d = d3.select(this).node().__data__;
+                node.style("opacity", function (o) {
+                    return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+                });
+                link.style("opacity", function (o) {
+                    return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+                });
+                //Reduce the op
+                toggle = 1;
+            } else {
+                //Put them back to opacity=1
+                node.style("opacity", 1);
+                link.style("opacity", 1);
+                toggle = 0;
+            }
+        }
+
+        force.on("tick", function () {
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+                .attr("y1", function (d) {
+                    return d.source.y;
+                })
+                .attr("x2", function (d) {
+                    return d.target.x;
+                })
+                .attr("y2", function (d) {
+                    return d.target.y;
+                });
+
+            linkText
+                .attr("x", function (d) {
+                    return ((d.source.x + d.target.x) / 2);
+                })
+                .attr("y", function (d) {
+                    return ((d.source.y + d.target.y) / 2);
+                });
+
+            node.attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+
+        });
+    });
+
+</script>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="BatViz">
+    <meta name="description" content="infx 562 final project">
+    <meta name="keywords" content="interactive, design, final project, Dijkstra's algorithm, infx 562">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding the Way - BatViz</title>
+    <link rel="stylesheet" href="styles.css">
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="//d3js.org/d3.v3.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+	<div id="content">
+		<div class="text">
+			<div class="article-header">
+				<h1 class="title"> Finding the Way </h1>
+				<h2 class="dek"> Make Dijkstra’s Algorithm Easy to Understand </h2>
+			</div>
+			<div class="byline"> by BatViz (Rui & Umang)</div>
+
+			<p>Have you ever heard about <em><!-- -->Dijkstra’s Algorithm</em>?  Do you know how <em><!-- -->Dijkstra’s Algorithm</em> can be used to solve problems in our daily life?  Now thinking back to a busy morning when you and your family members are all in a hurry and need to go to different places at a certain time, how did you and your family members decide the most efficient way to share the ride?  <em><!-- -->Dijkstra’s Algorithm</em> can help you find the answer.</p>
+
+			<h3 class="bodyhed1">Jack’s Family Needs Some Help</h3>
+
+			<p>Now, let’s work together to help Jack’s family make their busy morning easier.</p>   
+			 
+			<p>Jack is an elementary school student, and he lives with his Mom, Dad, and Grandpa.  On a Tuesday morning, Jack needs to go to school as usual.  His Dad needs to go to the office for an important meeting.  His Mom is planning to go to the supermarket to buy some fresh vegetables to cook lunch.  His Grandpa has a doctor appointment in the nearby hospital.  They decide to leave the house together and share the ride.  What is the fastest way for them to arrive at their destinations and how many cars do they need at minimum?</p>
+
+            <img src="story.png" alt="Mountain View" width="480" height="220">
+			 
+			<p>To solve this problem, we need to find the shortest paths between home and different destinations, and <em><!-- -->Dijkstra’s Algorithm</em> can help us find the answer.  Let’s use the directed edge-weighted graph at right as the map to solve this problem <em><!-- -->【Please play around with the graph.  You are able to drag the nodes to different places】</em>.</p>
+			
+			<h3 class="bodyhed1">Learn the Concept & Solve the Problem</h3>
+
+			<p><em><!-- -->Dijkstra’s Algorithm</em> is an algorithm for finding the shortest paths between nodes in a graph (Wikipedia).  The starting node is called initial node, and the end node is called destination node.  The algorithm first marks all nodes in the graph unvisited.  Then, it picks the unvisited node with the lowest distance, calculates the distance through it to each unvisited neighbor, and updates the neighbor’s distance if smaller.  Mark visited when done with neighbors.  Finally, when the destination node has been marked visited, the algorithm stops and the shortest path is found.</p>
+
+			<p>Let's work on the problem step by step:</p>
+                <button id="start"><img src="start.png"</button></button>
+
+			
+            <h4 class="bodyhed2">Step 1</h4>
+            <p>Let’s set node “Home” as our initial node and mark all nodes in the graph unvisited.</p>
+            <p>As you can see through the highlighting part of the graph, “School”, “Office”, and “Supermarket” are the three unvisited neighbor nodes for “Home”.  Please calculate the distance through “Home” to each unvisited neighbor node and click on the button below to select the unvisited neighbor node with the lowest distance. <em><!-- -->【Instruction: if the correct node is selected, you will see the calculation result of the distances of the neighbor nodes in the table on the right.  If the incorrect node is selected, the button will turn red.】</em></p>
+                
+                <button id="hometoschoolM"><img src="hometoschool.png"</button></button>
+                <button id="hometooffice"><img src="hometooffice.png"</button></button>
+                <button id="hometosupermarket"><img src="hometosupermarket.png"</button></button>
+
+            <h4 class="bodyhed2">Step 2</h4>
+            <p>Congratulations! Now you are at the step 2.  As you can see from the table on the right, the neighbor node “School” has the lowest distance (20) compared with “Office” (80) and “Supermarket” (90).  Let’s mark “School” visited and set it as our new current node <em><!-- -->【Please notice that the visited node and edge will never be checked again】</em>.  By looking at the highlighting part of the graph, we are able to see that “C” is the only unvisited neighbor node for “School”.  Please click on the button below to update the distance of the neighbor node in the table. </p>
+                 <button id="schooltocM"><img src="schooltoc.png"</button></button>
+            <p>Now, the unvisited neighbor node “C” has the lowest distance (30).  Let’s mark “C” visited and set it as our new current node.</p>  
+                <li>Visited Nodes: Home, School, C</li>
+                <li>Unvisited Nodes: A, Office, B, Supermarket, Hospital</li>
+
+
+            <h4 class="bodyhed2">Step 3</h4>
+            <p>Please calculate the distance through “C” to each unvisited neighbor node and click on the button below to select the unvisited neighbor node with the lowest distance.</p>
+                <button id="ctooffice"><img src="ctooffice.png"</button></button>
+                <button id="ctoaM"><img src="ctoa.png"</button></button>
+            <p>Based on the table, we know that the neighbor node “A” has the lowest distance (40).  Let’s mark “A” visited and set it as our new current node.</p> 
+                <li>Visited Nodes: Home, School, C, A</li>
+                <li>Unvisited Nodes: Office, B, Supermarket, Hospital</li>
+
+
+            <h4 class="bodyhed2">Step 4</h4>
+            <p>Please calculate the distance through “A” to each unvisited neighbor node and click on the button below to select the unvisited neighbor node with the lowest distance.</p>
+                <button id="atohospital"><img src="atohospital.png"</button></button>
+                <button id="atoofficeM"><img src="atooffice.png"</button></button>
+            <p>Based on the table, the neighbor node “Office” has the lowest distance (50).  Let’s mark “Office” visited and set it as our new current node.</p> 
+                <li>Visited Nodes: Home, School, C, A, Office</li>
+                <li>Unvisited Nodes: B, Supermarket, Hospital</li>
+
+
+            <h4 class="bodyhed2">Step 5</h4>
+            <p>Since “Supermarket” is the only unvisited neighbor node for “Office”.  Please click on the button below to update the distance of the neighbor node in the table. </p>
+                <button id="officetosupermarket"><img src="officetosupermarket.png"</button></button>
+            <p>Now, the unvisited neighbor node “Hospital” has the lowest distance (60).  Let’s mark “Hospital” visited and set it as our new current node.</p>
+                <li>Visited Nodes: Home, School, C, A, Office, Hospital</li>
+                <li>Unvisited Nodes: B, Supermarket</li>
+
+
+            <h4 class="bodyhed2">Step 6</h4>
+            <p>The node “Hospital” does not have any neighbor nodes around.  Please click on the button below to compute and update the table.</p>
+                <button id="hospitalM"><img src="hospitalcompute.png"</button></button>
+            <p>Now, the unvisited neighbor node “Supermarket” has the lowest distance (70).  Let’s mark “Supermarket” visited and set it as our new current node.</p> 
+                <li>Visited Nodes: Home, School, C, A, Office, Hospital, Supermarket</li>
+                <li>Unvisited Nodes: B</li>
+
+
+            <h4 class="bodyhed2">Step 7</h4>
+            <p>The node “Supermarket” does not have any neighbor nodes around.  Please click on the button below to compute and update the table.</p>
+                <button id="supermarketM"><img src="supermarketcompute.png"</button></button>
+            <p>The node “B” has a distance as “Infinity”, which means there is no path from “Home” to “B”</p>
+
+            <h3 class="bodyhed1">Quiz</h3>
+            <p>Now, the table is completed and the shortest paths from “Home” to all other nodes are found.  We can stop the Dijkstra’s Algorithm and finish up with a quiz.</p>
+            <p>Please use the table you completed to answer the questions below.</p>
+
+            <li>What is the shortest path that Jack’s Dad can take to his Office?</li>
+            <ol><button id="q1wrong"><img src="q1wrong.png"</button></button>
+            <button id="q1correct"><img src="q1correct.png"</button></button></ol>
+
+            <li>How many cars do they need at the minimum?</li>
+            <ol><button id="onecar"><img src="1car.png"</button></button>
+                <button id="twocars"><img src="2cars.png"</button></button>
+                <button id="threecars"><img src="3cars.png"</button></button></ol>
+		</div>
+
+
+		<div style="position:fixed" class="fixed">
+			<div class="graph"></div>
+			<div class="computedtable"></div>
+		</div>
+
+<script>
+
+
+    var width = 700,
+        height = 500;
+
+    var svg = d3.select(".graph").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    //Defining the Arrow
+    svg.append("defs").selectAll("marker")
+        .data(["suit", "licensing", "resolved"])
+        .enter().append("marker")
+        .attr("id", function (d) {
+            return d;
+        })
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 25)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+        .style("stroke", "#4679BD")
+        .style("opacity", "0.6");
+
+    //Defining the Force Layout
+    var force = d3.layout.force()
+        .gravity(0.05)
+        .distance(50)
+        .charge(-1600)
+        .linkDistance(1)
+        .linkStrength(0.1)
+        .size([width, height]);
+
+    d3.json("graph2.json", function (error, json) {
+        if (error) throw error;
+
+        force.nodes(json.nodes)
+            .links(json.links)
+            .start();
+
+        var link = svg.selectAll(".link")
+            .data(json.links)
+            .enter()
+            .append("g")
+            .attr("class", "link")
+            .append("line")
+            .attr("class", "link-line")
+            .style("marker-end", "url(#suit)")
+            .style("stroke-width", "2")
+            .style("stroke", "#4679BD")
+            .style("opacity", "0.6");
+
+
+        var linkText = svg.selectAll(".link")
+            .append("text")
+            .attr("class", "link-label")
+            .attr("font-family", "Arial, Helvetica, sans-serif")
+            .attr("stroke", "Black")
+            .style("font", "normal 14px Arial")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                return d.value;
+            });
+
+        var node = svg.selectAll(".node")
+            .data(json.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("id", function(d){return d.name})
+            .call(force.drag) // To enable dragging
+            .on('dblclick', function(){
+                connectedNodes(this);
+            }); //Added code
+
+
+        node.append("svg:circle")
+            .attr("r", 18)
+            .style("fill", "#eee");
+
+
+        node.append("image")
+            .attr("xlink:href", function (d) {
+                return d.position;
+            })
+            .attr("x", -14.5)
+            .attr("y", -14.5)
+            .attr("width", 30)
+            .attr("height", 30);
+
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function (d) {
+                return d.name
+            });
+
+
+        //Toggle stores whether the highlighting is on
+        var toggle = 0;
+        //Create an array logging what is connected to what
+        var linkedByIndex = {};
+        for (i = 0; i < json.nodes.length; i++) {
+            linkedByIndex[i + "," + i] = 1;
+        }
+        json.links.forEach(function (d) {
+            linkedByIndex[d.source.index + "," + d.target.index] = 1;
+        });
+        //This function looks up whether a pair are neighbours
+        function neighboring(a, b) {
+            return linkedByIndex[a.index + "," + b.index];
+        }
+        function connectedNodes(nodeId) {
+            if (toggle == 0) {
+                //Reduce the opacity of all but the neighbouring nodes
+                d = d3.select(nodeId).node().__data__;
+                node.style("opacity", function (o) {
+                    return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+                });
+                link.style("opacity", function (o) {
+                    return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+                });
+                //Reduce the op
+                toggle = 1;
+            } else {
+                //Put them back to opacity=1
+                node.style("opacity", 1);
+                link.style("opacity", 1);
+                toggle = 0;
+            }
+        }
+
+        force.on("tick", function () {
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+                .attr("y1", function (d) {
+                    return d.source.y;
+                })
+                .attr("x2", function (d) {
+                    return d.target.x;
+                })
+                .attr("y2", function (d) {
+                    return d.target.y;
+                });
+
+            linkText
+                .attr("x", function (d) {
+                    return ((d.source.x + d.target.x) / 2);
+                })
+                .attr("y", function (d) {
+                    return ((d.source.y + d.target.y) / 2);
+                });
+
+            node.attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+
+        });
+// Interaction - let's get started
+        d3.select("#start").on("click", myFunctionfromStart)
+
+        function myFunctionfromStart() {
+        if(currentRowIndex<0) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+
+        console.log(d3.select("#Home"))
+        connectedNodes("#Home")
+    }
+
+// interaction between button & table - Step 1
+    d3.select("#hometoschoolM").on("click", myFunctionfromHome)
+
+    function myFunctionfromHome() {
+        if(currentRowIndex<1) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+
+        console.log(d3.select("#School"))
+        connectedNodes("#School");
+        connectedNodes("#School");
+    }
+// interaction when users select wrong button
+    hometooffice.onclick = function() {
+         hometooffice.style.background = "red";
+    } 
+    hometosupermarket.onclick = function() {
+         hometosupermarket.style.background = "red";
+    }
+
+// Interaction - Step 2
+    d3.select("#schooltocM").on("click", myFunctionfromSchool)
+
+    function myFunctionfromSchool() {
+        if(currentRowIndex<2) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#C"))
+            connectedNodes("#C");
+            connectedNodes("#C");
+
+    }
+
+// Interaction - Step 3
+    d3.select("#ctoaM").on("click", myFunctionfromC)
+
+    function myFunctionfromC() {
+        if(currentRowIndex<3) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#A"))
+            connectedNodes("#A");
+            connectedNodes("#A");
+    }
+    ctooffice.onclick = function() {
+         ctooffice.style.background = "red";
+    }
+
+// Interaction - Step 4
+    d3.select("#atoofficeM").on("click", myFunctionfromA)
+
+    function myFunctionfromA() {
+        if(currentRowIndex<4) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#Office"))
+            connectedNodes("#Office");
+            connectedNodes("#Office");
+    }
+    atohospital.onclick = function() {
+         atohospital.style.background = "red";
+    }
+
+// Interaction - Step 5
+    d3.select("#officetosupermarket").on("click", myFunctionfromOffice)
+
+    function myFunctionfromOffice() {
+        if(currentRowIndex<5) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#Hospital"))
+            connectedNodes("#Hospital");
+            connectedNodes("#Hospital");
+    }
+
+// Interaction - Step 6
+    d3.select("#hospitalM").on("click", myFunctionfromHospital)
+
+    function myFunctionfromHospital() {
+        if(currentRowIndex<6) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#SuperMarket"))
+            connectedNodes("#SuperMarket");
+            connectedNodes("#SuperMarket");
+    }
+
+// Interaction - Step 7
+    d3.select("#supermarketM").on("click", myFunctionfromSupermarket)
+
+    function myFunctionfromSupermarket() {
+        if(currentRowIndex<7) {
+            var row = $("<tr></tr>");
+            var rowContent = "";
+                for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+                    rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+                }
+                    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+                    row.append(rowContent);
+
+                currentRowIndex += 1;
+                $(".mytable").append(row);
+        }
+            console.log(d3.select("#SuperMarket"))
+            connectedNodes("#SuperMarket");
+    }
+    });
+
+
+ //Creates the table
+
+    var rows = [
+        { current: "Home", values:["20 (Home)","Infinity","80 (Home)","Infinity","Infinity","90 (Home)","Infinity"]},
+        { current: "School", values:["20 (Home)","Infinity","80 (home)","Infinity","30 (School)","90 (Home)","Infinity"]},
+        { current: "C", values:["20 (Home)","40 (C)","70 (C)","Infinity","30 (School)","90 (Home)","Infinity"]},
+        { current: "A", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","90 (Home)","60 (A)"]},
+        { current: "Office", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]},
+        { current: "Hospital", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]},
+        { current: "Supermarket", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]}
+    ];
+
+    var table = d3.select('.computedtable')
+        .append('table')
+        .attr('class', 'mytable table');
+
+    $(".mytable").append("<thead><tr><th>Current Node</th><th>School</th><th>A</th><th>Office</th><th>B</th><th>C</th><th>Supermarket</th><th>Hospital</th></tr></thead>")
+
+    var rowsCount = rows.length;
+    var currentRowIndex = 0;
+
+//Quiz Buttons
+    q1correct.onclick = function() {
+         q1correct.style.background = "green";
+    }
+    q1wrong.onclick = function() {
+         q1wrong.style.background = "red";
+    }
+    onecar.onclick = function() {
+         onecar.style.background = "red";
+    }
+    twocars.onclick = function() {
+        twocars.style.background = "green";
+    }
+    threecars.onclick = function() {
+         threecars.style.background = "red";
+    }
+
+
+</script>
+
+</body>
+
+</html>

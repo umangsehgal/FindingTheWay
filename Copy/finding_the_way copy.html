@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="BatViz">
+    <meta name="description" content="infx 562 final project">
+    <meta name="keywords" content="interactive, design, final project, Dijkstra's algorithm, infx 562">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding the Way - BatViz</title>
+    <link rel="stylesheet" href="styles.css">
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="//d3js.org/d3.v3.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+	<div id="content">
+		<div class="text">
+			<div class="article-header">
+				<h1 class="title"> Finding the Way </h1>
+				<h2 class="dek"> Make Dijkstra’s Algorithm Easy to Understand </h2>
+			</div>
+			<div class="byline"> by BatViz (Rui & Umang)</div>
+
+			<p>Have you ever heard about <em><!-- -->Dijkstra’s Algorithm</em>?  Do you know how <em><!-- -->Dijkstra’s Algorithm</em> can be used to solve problems in our daily life?  Now thinking back to a busy morning when you and your family members are all in a hurry and need to go to different places at a certain time, how did you and your family members decide the most efficient way to share the ride?  <em><!-- -->Dijkstra’s Algorithm</em> can help you find the answer.</p>
+
+			<h3 class="bodyhed1">Jack’s Family Needs Some Help</h3>
+
+			<p>Now, let’s work together to help Jack’s family make their busy morning easier.</p>   
+			 
+			<p>Jack is an elementary school student, and he lives with his Mom, Dad, and Grandpa.  On a Tuesday morning, Jack needs to go to school as usual.  His Dad needs to go to the office for an important meeting.  His Mom is planning to go to the supermarket to buy some fresh vegetables to cook lunch.  His Grandpa has a doctor appointment in the nearby hospital.  They decide to leave the house together and share the ride.  What is the fastest way for them to arrive at their destinations and how many cars do they need at minimum?</p>
+			 
+			<p>To solve this problem, we need to find the shortest paths between home and different destinations, and Dijkstra’s Algorithm can help us find the answer.  Let’s use the directed edge-weighted graph at right as the map to solve this problem.  You can click on the icon buttons below to find out where are the destinations located.</p>
+
+			<button onclick="myFunction()"><img src="jack.png"</button></button>
+			<button onclick="myFunction()"><img src="dad.png"</button></button>
+			<button onclick="myFunction()"><img src="mom.png"</button></button>
+			<button onclick="myFunction()"><img src="grandpa.png"</button></button>
+			
+			<h3 class="bodyhed2">Learn the Concept & Solve the Problem</h3>
+
+			<p><em><!-- -->Dijkstra’s Algorithm</em> is an algorithm for finding the shortest paths between nodes in a graph (Wikipedia).  The starting node is called initial node, and the end node is called destination node.  The algorithm first marks all nodes in the graph unvisited.  Then, it picks the unvisited node with the lowest distance, calculates the distance through it to each unvisited neighbor, and updates the neighbor’s distance if smaller.  Mark visited when done with neighbors.  Finally, when the destination node has been marked visited, the algorithm stops and the shortest path is found.
+		</div>
+
+
+
+		<div style="position:fixed" class="fixed">
+			<div class="graph"></div>
+			<div class="computedtable"></div>
+		</div>
+
+<script>
+
+	var width = 700,
+        height = 500;
+
+    var svg = d3.select(".graph").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    //Arrow
+    svg.append("defs").selectAll("marker")
+        .data(["suit", "licensing", "resolved"])
+        .enter().append("marker")
+        .attr("id", function(d) { return d; })
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 25)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+        .style("stroke", "#4679BD")
+        .style("opacity", "0.6");
+
+    var force = d3.layout.force()
+        .gravity(0.05)
+        .distance(50)
+        .charge(-1600)
+        .linkDistance(1)
+        .linkStrength(0.1)
+        .size([width, height]);
+
+    d3.json("graph2.json", function(error, json) {
+        if (error) throw error;
+
+        force
+            .nodes(json.nodes)
+            .links(json.links)
+            .start();
+
+
+        var link = svg.selectAll(".link")
+            .data(json.links)
+            .enter()
+            .append("g")
+            .attr("class", "link")
+            .append("line")
+            .attr("class", "link-line").style("marker-end",  "url(#suit)")
+            ;
+        link.style("stroke-width", 1.5);
+
+        var linkText = svg.selectAll(".link")
+            .append("text")
+            .attr("class", "link-label")
+            .attr("font-family", "Arial, Helvetica, sans-serif")
+            .attr("fill", "Black")
+            .style("font", "normal 12px Arial")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                return d.value;
+            });
+
+        var node = svg.selectAll(".node")
+            .data(json.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(force.drag); // To enable dragging
+
+        node.append("svg:circle")
+            .attr("r", 14)
+            .style("fill", "#eee");
+
+
+
+        node.append("image")
+            .attr("xlink:href", function(d) { return d.position;})
+            .attr("x", -12.5)
+            .attr("y", -12.5)
+            .attr("width", 25)
+            .attr("height", 25);
+
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.name });
+
+        force.on("tick", function() {
+            link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            linkText
+                .attr("x", function(d) {
+                    return ((d.source.x + d.target.x)/2);
+                })
+                .attr("y", function(d) {
+                    return ((d.source.y + d.target.y)/2);
+                });
+
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+        });
+    });
+
+
+    var rows = [
+        { current: "Home", values:["20 (Home)","Infinity","80 (Home)","Infinity","Infinity","90 (Home)","Infinity"]},
+        { current: "School", values:["20 (Home)","Infinity","80 (home)","Infinity","30 (School)","90 (Home)","Infinity"]},
+        { current: "C", values:["20 (Home)","40 (C)","70 (C)","Infinity","30 (School)","90 (Home)","Infinity"]},
+        { current: "A", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","90 (Home)","60 (A)"]},
+        { current: "Office", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]},
+        { current: "Hospital", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]},
+        { current: "Supermarket", values:["20 (Home)","40 (C)","50 (A)","Infinity","30 (School)","70 (Office)","60 (A)"]}
+    ];
+
+ // create table
+    var table = d3.select('.computedtable')
+        .append('table')
+        .attr('class', 'mytable table');
+
+    $(".mytable").append("<thead><tr><th>Current Node</th><th>School</th><th>A</th><th>Office</th><th>B</th><th>C</th><th>Supermarket</th><th>Hospital</th></tr></thead>")
+
+    var rowsCount = rows.length;
+    var currentRowIndex = 0;
+
+    function drawRowsLineByLine() {
+    	console.log(currentRowIndex)
+    	if(currentRowIndex<rowsCount) {
+    		var row = $("<tr></tr>");
+	    	var rowContent = "";
+		   	console.log(rows[currentRowIndex].values)
+		   	for (var j = 0; j < rows[currentRowIndex].values.length; j++) {
+
+		   		rowContent += "<td id='"+ rows[currentRowIndex].values[j] +"'>" + rows[currentRowIndex].values[j] + "</td>";
+		   	}
+		    row.append("<th>" + rows[currentRowIndex].current + "</th>")
+		    row.append(rowContent);
+
+	    	currentRowIndex += 1;
+	    	$(".mytable").append(row);
+    	} else {
+    		clearInterval(myvar);
+    	}
+   		
+    }
+
+    var myvar = setInterval(drawRowsLineByLine, 500);
+
+
+
+
+</script>
+
+</body>
+
+</html>
